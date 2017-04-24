@@ -81,4 +81,14 @@ struct Update_Finger {
     uint32_t idx;
 };
 
+struct Get_Closest_Pred {
+    uint32_t type;
+    uint32_t id;
+};
+
+struct Closest_Pred {
+    uint32_t type;
+    struct Node pred;
+};
+
 #endif

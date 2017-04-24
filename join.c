@@ -17,7 +17,16 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
     char recv_buf[BUF_SIZE];
     while (1) {
         bzero(recv_buf, BUF_SIZE);
+        if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
+                (struct sockaddr *) NULL, NULL) < 0) {
+            perror("ERROR recvfrom() query_succ");
+        }
 
+        uint32_t *msg_type = (uint32_t *) recv_buf;
+        if (*msg_type != FIND_SUCC_ANS_TYPE) continue;
+
+        memcpy(result, recv_buf + 4, NODE_SIZE);
+        break;
     }
 
     memcpy(result, recv_buf + 4, sizeof(struct Node));
@@ -39,7 +48,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     entry_node.sin_addr.s_addr = inet_addr(entry_point);
 
     // finger[0].node = n_.find_successor(finger[0].start)
-    find_successor(ctx, &entry_node, &ctx->finger[0].node, ctx->finger[0].start);
+    query_succ(ctx, &entry_node, &ctx->finger[0].node, ctx->finger[0].start);
     ctx->local_succ = &ctx->finger[0].node;
 
     struct Get_Pred *get_pred = (struct Get_Pred *) malloc(sizeof(struct Get_Pred));
@@ -58,9 +67,19 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
 
     while (1) {
         bzero(recv_buf, BUF_SIZE);
+        if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
+                (struct sockaddr *) NULL, NULL) < 0) {
+            perror("ERROR recvfrom() get_pred");
+        }
+
+        uint32_t *msg_type = (uint32_t *) recv_buf;
+        if (*msg_type != GET_PRED_ANS_TYPE) continue;
+
+        memcpy(&ctx->local_pred, recv_buf + 4, NODE_SIZE);
+        break;
     }
 
-    //  TODO: successor.predecessor = local_node
+    //  successor.predecessor = local_node
     set_pred(ctx, ctx->local_succ, ctx->local_node);
 
 
@@ -68,7 +87,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
         if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < ctx->finger[i].node.id) {
             memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
         } else {
-            find_successor(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
+            query_succ(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
         }
     }
 

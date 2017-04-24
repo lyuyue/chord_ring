@@ -1,3 +1,4 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -45,6 +46,10 @@ int main(int argc, char *argv[]) {
 
     ctx.local_succ = (struct Node *) &ctx.finger[0].node;
 
+    get_local_ip(&ctx.local_node->addr);
+    ctx.local_node->addr.sin_family = AF_INET;
+    ctx.local_node->addr.sin_port = htons(ctx.port);
+
     // Initialization
 
     if ((ctx.sockfd = socket_init(ctx.port)) < 0) {
@@ -66,7 +71,8 @@ int main(int argc, char *argv[]) {
     }
 
 
-    //
+    fcntl(ctx.sockfd, F_SETFL, O_NONBLOCK);
+
     char recv_buf[BUF_SIZE];
     while (1) {
         // Initialization
@@ -81,6 +87,30 @@ int main(int argc, char *argv[]) {
         }
 
         uint32_t *msg_type = (uint32_t *) recv_buf;
+
+        if (*msg_type == FIND_SUCC_TYPE) {
+
+        }
+
+        if (*msg_type == GET_SUCC_TYPE) {
+
+        }
+
+        if (*msg_type == GET_PRED_TYPE) {
+
+        }
+
+        if (*msg_type == SET_PRED_TYPE) {
+
+        }
+
+        if (*msg_type == UPDATE_FINGER_TYPE) {
+
+        }
+
+        if (*msg_type == GET_CLOSEST_PRED_TYPE) {
+
+        }
     }
     
     return 0;
