@@ -1,10 +1,12 @@
+#include "join.h"
+
 void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *result, uint32_t id) {
     struct Find_Succ *find_succ = (struct Find_Succ *) malloc(sizeof(struct Find_Succ));
     find_succ->type = FIND_SUCC_TYPE;
     find_succ->id = id;
 
     if (sendto(ctx->sockfd, (char *) find_succ, sizeof(struct Find_Succ), 0,
-        (struct sockaddr *) entry_addr, sizeof(struct sockaddr))) < 0) {
+        (struct sockaddr *) entry_addr, sizeof(struct sockaddr)) < 0) {
         perror("ERROR sendto(): Find_Succ");
         free(find_succ);
         return;
@@ -23,7 +25,8 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
 }
 
 void set_pred(struct CTX *ctx, struct Node *dst, struct Node *pred) {
-
+    struct Set_Pred *msg = (struct Set_Pred *) malloc(sizeof(struct Set_Pred));
+    msg->type = SET_PRED_TYPE;
 }
 
 void init_finger_table(struct CTX *ctx, char *entry_point) {
@@ -33,23 +36,25 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     struct sockaddr_in entry_node;
     entry_node.sin_family = AF_INET;
     entry_node.sin_port = htons(ctx->port);
-    entry_node.sin_addr.s_addr = ;
+    entry_node.sin_addr.s_addr = inet_addr(entry_point);
 
     // finger[0].node = n_.find_successor(finger[0].start)
-    find_succ_by_id(ctx, &entry_node, &ctx->finger[0].node, finger[0].start);
+    find_successor(ctx, &entry_node, &ctx->finger[0].node, ctx->finger[0].start);
     ctx->local_succ = &ctx->finger[0].node;
 
     struct Get_Pred *get_pred = (struct Get_Pred *) malloc(sizeof(struct Get_Pred));
     get_pred->type = GET_PRED_TYPE;
 
     if (sendto(ctx->sockfd, (char *) get_pred, sizeof(get_pred), 0,
-        (struct sockaddr *) ctx->local_succ, sizeof(struct sockaddr_in))) < 0) {
+        (struct sockaddr *) ctx->local_succ, sizeof(struct sockaddr_in)) < 0) {
         perror("ERROR sendto(): Get_Pred");
         free(get_pred);
         return;  
     }
 
     free(get_pred);
+
+    char recv_buf[BUF_SIZE];
 
     while (1) {
         bzero(recv_buf, BUF_SIZE);
@@ -63,7 +68,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
         if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < ctx->finger[i].node.id) {
             memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
         } else {
-            find_succ_by_id(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
+            find_successor(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
         }
     }
 
@@ -74,7 +79,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
 void update_others(struct CTX *ctx) {
     for (int i = 0; i < MAXM; i++) {
         struct Node *tmp = (struct Node *) malloc(sizeof(struct Node));
-        find_predecessor(ctx, tmp, ctx->local_id - 2 ^ i);
+        find_predecessor(ctx, tmp, ctx->local_id - power(2, i));
         update_finger_table(ctx, tmp, ctx->local_node, i);
     }
 }

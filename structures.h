@@ -1,4 +1,8 @@
 #include <netinet/in.h>
+#include "const.h"
+
+#ifndef STRUCTURES_H
+#define STRUCTURES_H
 
 struct Node {
     uint32_t id;
@@ -20,7 +24,7 @@ struct CTX {
     int sockfd;
     int port;
 
-    struct sockaddr_in local_addr;·
+    struct sockaddr_in local_addr;
     struct Finger_Entry finger[MAXM];
 };
 
@@ -76,3 +80,5 @@ struct Update_Finger {
     struct Node node;
     uint32_t idx;
 };
+
+#endif

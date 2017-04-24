@@ -1,6 +1,8 @@
+#include "helper.h"
+
 int socket_init(int port_n) {
     struct sockaddr_in addr;
-    bzero(&addr, SOCKADDR_SIZE;
+    bzero(&addr, SOCKADDR_SIZE);
 
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port_n);
@@ -20,4 +22,12 @@ int socket_init(int port_n) {
     }
 
     return sockfd;
+}
+
+uint32_t power(uint32_t n, uint32_t k) {
+    uint32_t result = n;
+    for (int i = 0; i < k; i ++) {
+        result = result * n;
+    }
+    return result;
 }

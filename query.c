@@ -1,11 +1,9 @@
 #include "query.h"
-#include "const.h"
-#include "structures.h"
 
 // ask node for id's successor
-void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
+void find_successor(struct CTX *ctx, struct sockaddr_in *entry_point, struct Node *result, uint32_t id) {
     find_predecessor(ctx, result, id);
-    get_node_successor(ctx, &result, &result);
+    get_node_successor(ctx, result, result);
     return;
 }
 
@@ -18,15 +16,15 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
     memcpy(&cur_node->addr, &ctx->local_addr, SOCKADDR_SIZE);
 
     while (1) {
-        get_node_successor(&succ_node, &cur_node);
+        get_node_successor(ctx, succ_node, cur_node);
         if (cur_node->id < id && id <= succ_node->id) {
             break;
         }
 
-        get_closest_preceding_finger(cur_node, id);
+        get_closest_preceding_finger(ctx, cur_node, id);
     }
 
-    memcpy(&result, &cur_node, NODE_SIZE);
+    memcpy(result, cur_node, NODE_SIZE);
 
     free(cur_node);
     free(succ_node);
@@ -65,6 +63,10 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
         memcpy(result, recv_buf + 4, NODE_SIZE);
     }
 
+    return;
+}
+
+void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t id) {
     return;
 }
 

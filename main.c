@@ -1,21 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "structures.h"
 #include "const.h"
-#include "udp.h"
+#include "helper.h"
+#include "join.h"
+#include "query.h"
 
 struct CTX ctx;
 
 char *entry_point = NULL;
-
-uint32_t power(uint32_t n, uint32_t k) {
-    uint32_t result = n;
-    for (int i = 0; i < k; i ++) {
-        result = result * n;
-    }
-    return result;
-}
 
 int main(int argc, char *argv[]) {
     // Parse Argument
@@ -29,7 +24,7 @@ int main(int argc, char *argv[]) {
         if (strcmp(argv[arg_itr], "--port") == 0) {
             arg_itr ++;
             ctx.port = atoi(argv[arg_itr]);
-            continue
+            continue;
         }
 
         if (strcmp(argv[arg_itr], "--entry-point") == 0) {
@@ -51,9 +46,8 @@ int main(int argc, char *argv[]) {
     ctx.local_succ = (struct Node *) &ctx.finger[0].node;
 
     // Initialization
-    bzero(&local_addr, SOCKADDR_SIZE);
 
-    if ((sockfd = socket_init(port)) < 0) {
+    if ((ctx.sockfd = socket_init(ctx.port)) < 0) {
         perror("ERROR socket_init()");
         exit(-1);
     }
@@ -67,10 +61,8 @@ int main(int argc, char *argv[]) {
         memcpy(ctx.local_pred, ctx.local_node, NODE_SIZE);
     } else {
         // an arbitrary entry point of network is given
-        init_finger_table(ctx);
-        update_others();
-
-
+        init_finger_table(&ctx, entry_point);
+        update_others(&ctx);
     }
 
 
@@ -83,40 +75,12 @@ int main(int argc, char *argv[]) {
         struct sockaddr_in src_addr;
         uint32_t addrlen = SOCKADDR_SIZE;
 
-        if (recvfrom(sockfd, recv_buf, BUF_SIZE,
+        if (recvfrom(ctx.sockfd, recv_buf, BUF_SIZE, 0,
                 (struct sockaddr *) &src_addr, &addrlen) < 0) {
             continue;
         }
 
         uint32_t *msg_type = (uint32_t *) recv_buf;
-
-        if (*msg_type == KEY_QUERY_TYPE) {
-            struct Query_Message *query = (struct Query_Message *) malloc(QUERY_SIZE);
-            memcpy(query, recv_buf, QUERY_SIZE);
-
-            if (query->src.sin_addr.s_addr == 0) {
-                memcpy(query->src, &src_addr, SOCKADDR_SIZE);
-            }
-
-
-            continue;
-        }
-
-        if (*msg_type == FIND_SUCC_TYPE) {
-            struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
-        }
-
-        if (*msg_type == SUCC_ANS_TYPE) {
-
-        }
-
-        if (*msg_type == PRED_QUERY_TYPE) {
-
-        }
-
-        if (*msg_type == PRED_ANS_TYPE) {
-
-        }
     }
     
     return 0;
