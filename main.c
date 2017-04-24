@@ -93,23 +93,60 @@ int main(int argc, char *argv[]) {
         }
 
         if (*msg_type == GET_SUCC_TYPE) {
+            struct Get_Succ_Ans *msg = (struct Get_Succ_Ans *) 
+                malloc(sizeof(struct Get_Succ_Ans));
+            msg->type = GET_SUCC_ANS_TYPE;
+            memcpy(&msg->succ, ctx.local_succ, NODE_SIZE);
+            if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Succ_Ans), 0,
+                    (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() get_succ_ans");
+                free(msg);
+                continue;
+            }
 
+            free(msg);
         }
 
         if (*msg_type == GET_PRED_TYPE) {
+            struct Get_Pred_Ans *msg = (struct Get_Pred_Ans *) 
+                malloc(sizeof(struct Get_Pred_Ans));
+            msg->type = GET_PRED_ANS_TYPE;
+            memcpy(&msg->pred, ctx.local_pred, NODE_SIZE);
+            if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Pred_Ans), 0,
+                    (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() get_succ_ans");
+                free(msg);
+                continue;
+            }
 
+            free(msg);
         }
 
         if (*msg_type == SET_PRED_TYPE) {
-
+            memcpy(ctx.local_pred, recv_buf + 4, NODE_SIZE);
         }
 
         if (*msg_type == UPDATE_FINGER_TYPE) {
-
+            struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
+            memcpy(tmp_node, recv_buf + 4, NODE_SIZE);
+            uint32_t idx;
+            memcpy(&idx, recv_buf + 4 + NODE_SIZE, 4);
+            // TODO: multithread
+            update_finger_table_handler(&ctx, tmp_node, idx);
         }
 
         if (*msg_type == GET_CLOSEST_PRED_TYPE) {
+            struct Get_Closest_Pred *tmp = (struct Get_Closest_Pred *) recv_buf;
+            struct Closest_Pred *msg = (struct Closest_Pred *) 
+                malloc(sizeof(struct Closest_Pred));
 
+            closest_preceding_finger_handler(&ctx, &msg->pred, tmp->id);
+
+            if (sendto(ctx.sockfd, (char *) msg, sizeof(msg), 0,
+                    (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() closest_preceding_finger_handler");
+                continue;
+            }
         }
     }
     
