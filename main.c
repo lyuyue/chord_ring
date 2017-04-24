@@ -89,7 +89,21 @@ int main(int argc, char *argv[]) {
         uint32_t *msg_type = (uint32_t *) recv_buf;
 
         if (*msg_type == FIND_SUCC_TYPE) {
+            uint32_t id = 0;
+            memcpy(&id, recv_buf + 4, 4);
 
+            struct Find_Succ_Ans *msg = (struct Find_Succ_Ans *)
+                malloc(sizeof(struct Find_Succ_Ans));
+            msg->type = FIND_SUCC_ANS_TYPE;
+
+            find_successor(&ctx, &msg->succ, id);
+
+            if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Pred_Ans), 0,
+                    (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() find_successor");
+            }
+
+            free(msg);
         }
 
         if (*msg_type == GET_SUCC_TYPE) {
