@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
     ctx.local_node->addr.sin_family = AF_INET;
     ctx.local_node->addr.sin_port = htons(ctx.port);
 
+    ctx.local_node->id = ctx.local_id;
     // Initialization
 
     if ((ctx.sockfd = socket_init(ctx.port)) < 0) {

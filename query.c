@@ -36,6 +36,11 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
     // struct Node *tmp_node = (struct Node *) malloc(sizeof(struct Node));
     // send get_successor and receive response
 
+    if (cur_node->id == ctx->local_id) {
+        memcpy(result, ctx->local_succ, NODE_SIZE);
+        return;
+    }
+
     socklen_t addrlen = SOCKADDR_SIZE;
     uint32_t msg_len = sizeof(struct Get_Succ);
     struct Get_Succ *msg = (struct Get_Succ *) malloc(msg_len);
