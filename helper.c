@@ -31,8 +31,7 @@ void get_local_ip(struct sockaddr_in *result) {
     int sock = socket ( AF_INET, SOCK_DGRAM, 0);
      
     //Socket could not be created
-    if(sock < 0)
-    {
+    if (sock < 0) {
         perror("Socket error");
     }
      
@@ -52,8 +51,7 @@ void get_local_ip(struct sockaddr_in *result) {
     char buffer[100];
     const char* p = inet_ntop(AF_INET, &name.sin_addr, buffer, 100);
          
-    if(p != NULL)
-    {
+    if (p != NULL) {
         printf("Local ip is : %s \n" , buffer);
     }
 
