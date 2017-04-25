@@ -24,7 +24,7 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
 
         uint32_t tmp_id = id;
         if (tmp_id < cur_node->id) tmp_id += power(2, MAXM); 
-        if (cur_node->id <= tmp_id && tmp_id <= upper_bound) {
+        if (cur_node->id <= tmp_id && tmp_id < upper_bound) {
             break;
         }
 
