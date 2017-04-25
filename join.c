@@ -99,10 +99,11 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     for (int i = 0; i < MAXM - 1; i++) {
         uint32_t finger_id = ctx->finger[i].node.id;
         if (finger_id <= ctx->local_id) finger_id += power(2, MAXM);
+
         if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < finger_id) {
             memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
         } else {
-            query_succ(ctx, &ctx->finger[i + 1].node.addr, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
+            query_succ(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
         }
     }
 
