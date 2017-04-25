@@ -31,7 +31,8 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
         break;
     }
 
-    memcpy(result, recv_buf + 4, sizeof(struct Node));
+    result->addr.sin_family = AF_INET;
+    result->addr.sin_port = htons(ctx->port);
     return;
 }
 
@@ -66,8 +67,6 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     }
 
     free(get_pred);
-
-    print_ctx(ctx);
 
     char recv_buf[BUF_SIZE];
 
