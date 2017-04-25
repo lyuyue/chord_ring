@@ -7,40 +7,6 @@ void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
     return;
 }
 
-// ask node for id's predecessor
-void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
-    printf("find_predecessor for ID：%u\n", id);
-    struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
-    struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
-
-    memcpy(cur_node, ctx->local_node, NODE_SIZE);
-
-    while (1) {
-        bzero(succ_node, NODE_SIZE);
-        get_node_successor(ctx, cur_node, succ_node);
-        uint32_t upper_bound = succ_node->id;
-        printf("cur_id: %u, successor id: %u\n", cur_node->id, succ_node->id);
-        if (upper_bound <= cur_node->id) upper_bound += power(2, MAXM);
-
-        uint32_t tmp_id = id;
-        if (tmp_id < cur_node->id) tmp_id += power(2, MAXM); 
-        if (cur_node->id <= tmp_id && tmp_id < upper_bound) {
-            break;
-        }
-
-        get_closest_preceding_finger(ctx, cur_node, id);
-        printf("closest_preceding_finger %u %s\n", cur_node->id, inet_ntoa(cur_node->addr.sin_addr));
-    }
-
-    memcpy(result, cur_node, NODE_SIZE);
-
-    printf("find_predecessor result %u\n", result->id);
-
-    free(cur_node);
-    free(succ_node);
-    return;
-}
-
 void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *result) {
     // struct Node *tmp_node = (struct Node *) malloc(sizeof(struct Node));
     // send get_successor and receive response
@@ -79,6 +45,40 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
         break;
     }
 
+    return;
+}
+
+// ask node for id's predecessor
+void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
+    printf("find_predecessor for ID：%u\n", id);
+    struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
+    struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
+
+    memcpy(cur_node, ctx->local_node, NODE_SIZE);
+
+    while (1) {
+        bzero(succ_node, NODE_SIZE);
+        get_node_successor(ctx, cur_node, succ_node);
+        uint32_t upper_bound = succ_node->id;
+        printf("cur_id: %u, successor id: %u\n", cur_node->id, succ_node->id);
+        if (upper_bound <= cur_node->id) upper_bound += power(2, MAXM);
+
+        uint32_t tmp_id = id;
+        if (tmp_id < cur_node->id) tmp_id += power(2, MAXM); 
+        if (cur_node->id < tmp_id && tmp_id <= upper_bound) {
+            break;
+        }
+
+        get_closest_preceding_finger(ctx, cur_node, id);
+        printf("closest_preceding_finger %u %s\n", cur_node->id, inet_ntoa(cur_node->addr.sin_addr));
+    }
+
+    memcpy(result, cur_node, NODE_SIZE);
+
+    printf("find_predecessor result %u\n", result->id);
+
+    free(cur_node);
+    free(succ_node);
     return;
 }
 

@@ -181,6 +181,7 @@ int main(int argc, char *argv[]) {
             
             struct Closest_Pred *msg = (struct Closest_Pred *) 
                 malloc(sizeof(struct Closest_Pred));
+            msg->type = CLOSEST_PRED_TYPE;
 
             closest_preceding_finger_handler(&ctx, &msg->pred, tmp->id);
 
