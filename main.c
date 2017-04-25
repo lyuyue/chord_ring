@@ -14,6 +14,9 @@ struct CTX ctx;
 char *entry_point = NULL;
 
 int main(int argc, char *argv[]) {
+    // Initialization
+    bzero(&ctx, sizeof(struct CTX));
+    
     // Parse Argument
     for (int arg_itr = 1; arg_itr < argc; arg_itr ++) {
         if (strcmp(argv[arg_itr], "--node-id") == 0) {
@@ -36,7 +39,6 @@ int main(int argc, char *argv[]) {
     }
 
     // Context setup
-    bzero(&ctx, sizeof(struct CTX));
     ctx.local_node = (struct Node *) malloc(NODE_SIZE);
     ctx.local_pred = (struct Node *) malloc(NODE_SIZE);
 
