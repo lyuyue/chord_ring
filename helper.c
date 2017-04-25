@@ -61,7 +61,7 @@ void get_local_ip(struct sockaddr_in *result) {
 }
 
 uint32_t power(uint32_t n, uint32_t k) {
-    uint32_t result = n;
+    uint32_t result = 1;
     for (int i = 0; i < k; i ++) {
         result = result * n;
     }
