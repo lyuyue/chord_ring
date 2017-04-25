@@ -16,7 +16,7 @@ char *entry_point = NULL;
 int main(int argc, char *argv[]) {
     // Initialization
     bzero(&ctx, sizeof(struct CTX));
-    
+
     // Parse Argument
     for (int arg_itr = 1; arg_itr < argc; arg_itr ++) {
         if (strcmp(argv[arg_itr], "--node-id") == 0) {
@@ -98,6 +98,8 @@ int main(int argc, char *argv[]) {
             uint32_t id = 0;
             memcpy(&id, recv_buf + 4, 4);
 
+            printf("FIND_SUCC_TYPE from %s for ID %u\n", inet_ntoa(src_addr.sin_addr), id);
+
             struct Find_Succ_Ans *msg = (struct Find_Succ_Ans *)
                 malloc(sizeof(struct Find_Succ_Ans));
             msg->type = FIND_SUCC_ANS_TYPE;
@@ -113,6 +115,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (*msg_type == GET_SUCC_TYPE) {
+            printf("GET_SUCC_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             struct Get_Succ_Ans *msg = (struct Get_Succ_Ans *) 
                 malloc(sizeof(struct Get_Succ_Ans));
             msg->type = GET_SUCC_ANS_TYPE;
@@ -128,6 +131,7 @@ int main(int argc, char *argv[]) {
         }
 
         if (*msg_type == GET_PRED_TYPE) {
+            printf("GET_PRED_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             struct Get_Pred_Ans *msg = (struct Get_Pred_Ans *) 
                 malloc(sizeof(struct Get_Pred_Ans));
             msg->type = GET_PRED_ANS_TYPE;
@@ -143,10 +147,12 @@ int main(int argc, char *argv[]) {
         }
 
         if (*msg_type == SET_PRED_TYPE) {
+            printf("SET_PRED_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             memcpy(ctx.local_pred, recv_buf + 4, NODE_SIZE);
         }
 
         if (*msg_type == UPDATE_FINGER_TYPE) {
+            printf("UPDATE_FINGER_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
             memcpy(tmp_node, recv_buf + 4, NODE_SIZE);
             uint32_t idx;
@@ -157,6 +163,9 @@ int main(int argc, char *argv[]) {
 
         if (*msg_type == GET_CLOSEST_PRED_TYPE) {
             struct Get_Closest_Pred *tmp = (struct Get_Closest_Pred *) recv_buf;
+
+            printf("GET_CLOSEST_PRED_TYPE from %s for %u\n", inet_ntoa(src_addr.sin_addr), tmp->id);
+            
             struct Closest_Pred *msg = (struct Closest_Pred *) 
                 malloc(sizeof(struct Closest_Pred));
 
