@@ -87,6 +87,7 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
     // get local 
     if (node->id == ctx->local_id) {
         closest_preceding_finger_handler(ctx, node, id);
+        printf("get_closest_preceding_finger for ID: %u result %u\n", id, node->id);
         return;
     }
 
