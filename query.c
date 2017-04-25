@@ -42,7 +42,7 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
     msg->type = GET_SUCC_TYPE;
 
     if (sendto(ctx->sockfd, (char *) msg, msg_len, 0,
-        (struct sockaddr *) &ctx->local_node->addr, SOCKADDR_SIZE) < 0) {
+        (struct sockaddr *) &cur_node->addr, SOCKADDR_SIZE) < 0) {
         perror("ERROR sendto() get_node_successor");
         free(msg);
         exit(1);
