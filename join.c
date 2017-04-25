@@ -106,6 +106,8 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
 
     print_ctx(ctx);
 
+    printf("init_finger_table() finished\n");
+
     return;
 }
 
