@@ -110,6 +110,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
 
 
 void update_others(struct CTX *ctx) {
+    printf("update_others\n");
     for (int i = 0; i < MAXM; i++) {
         struct Node *tmp = (struct Node *) malloc(sizeof(struct Node));
         find_predecessor(ctx, tmp, (ctx->local_id + power(2, MAXM) - power(2, i)) % power(2, MAXM));
