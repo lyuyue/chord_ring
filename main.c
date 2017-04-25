@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     ctx.local_pred = (struct Node *) malloc(NODE_SIZE);
 
     for (int i = 0; i < MAXM; i ++) {
-        ctx.finger[i].start = （ctx.local_id + power(2, i)）% power(2, MAXM);
+        ctx.finger[i].start = (ctx.local_id + power(2, i)) % power(2, MAXM);
     }
 
     ctx.local_succ = (struct Node *) &ctx.finger[0].node;

@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include "const.h"
+#include "structures.h"
 
 #ifndef HELPER_H
 #define HELPER_H
