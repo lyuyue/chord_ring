@@ -95,7 +95,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     set_pred(ctx, ctx->local_succ, ctx->local_node);
 
 
-    for (int i = 0; i < MAXM; i++) {
+    for (int i = 0; i < MAXM - 1; i++) {
         if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < ctx->finger[i].node.id) {
             memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
         } else {
