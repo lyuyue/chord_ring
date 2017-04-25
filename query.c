@@ -9,7 +9,7 @@ void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
 
 // ask node for id's predecessor
 void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
-    printf("find_predecessor\n");
+    printf("find_predecessor ID：%u\n", id);
     struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
     struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
 
@@ -79,7 +79,7 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
 }
 
 void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t id) {
-    printf("get_closest_preceding_finger\n");
+    printf("get_closest_preceding_finger Node ID: %u, ID: %u\n", node->id, id);
     // get local 
     if (node->id == ctx->local_id) {
         closest_preceding_finger_handler(ctx, node, id);
@@ -123,6 +123,7 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
 
 // return closet finger preceding id
 void closest_preceding_finger_handler(struct CTX *ctx, struct Node *result, uint32_t id) {
+    printf("closest_preceding_finger_handler ID: %u\n", id);
     if (id < ctx->local_id) id += power(2, MAXM);
     for (int i = MAXM; i > 0; i--) {
         uint32_t finger_id = ctx->finger[i].node.id;
