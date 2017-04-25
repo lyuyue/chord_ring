@@ -3,7 +3,7 @@
 // ask node for id's successor
 void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
     find_predecessor(ctx, result, id);
-    get_node_successor(ctx, result, result);
+    //get_node_successor(ctx, result, result);
     return;
 }
 
