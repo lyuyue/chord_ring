@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     } else {
         // an arbitrary entry point of network is given
         init_finger_table(&ctx, entry_point);
-        update_others(&ctx);
+        // update_others(&ctx);
     }
 
     print_ctx(&ctx);
