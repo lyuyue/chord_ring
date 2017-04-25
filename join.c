@@ -153,7 +153,7 @@ void update_finger_table_handler(struct CTX *ctx, struct Node *node, uint32_t id
     uint32_t node_id = node->id;
     if (node_id < ctx->local_id) node_id += power(2, MAXM);
 
-    if (ctx->local_id < node_id && node_id < finger_id) {
+    if (ctx->local_id <= node_id && node_id < finger_id) {
         memcpy(&ctx->finger[idx].node, node, NODE_SIZE);
         print_ctx(ctx);
         update_finger_table(ctx, ctx->local_pred, node, idx);
