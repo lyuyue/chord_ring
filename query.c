@@ -112,6 +112,7 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
         if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
             (struct sockaddr *) NULL, NULL) < 0) {
             perror("ERROR recvfrom() get_closest_preceding_finger");
+            exit(1);
         }
 
         uint32_t *msg_type = (uint32_t *) recv_buf;

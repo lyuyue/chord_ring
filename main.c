@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     print_ctx(&ctx);
 
 
-    //fcntl(ctx.sockfd, F_SETFL, O_NONBLOCK);
+    fcntl(ctx.sockfd, F_SETFL, O_NONBLOCK);
 
     char recv_buf[BUF_SIZE];
     while (1) {
