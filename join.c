@@ -33,6 +33,7 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
 }
 
 void set_pred(struct CTX *ctx, struct Node *dst, struct Node *pred) {
+    printf("set_pred dst ID: %u, pred ID: %u\n", dst->id, pred->id);
     struct Set_Pred *msg = (struct Set_Pred *) malloc(sizeof(struct Set_Pred));
     msg->type = SET_PRED_TYPE;
     memcpy(&msg->pred, pred, NODE_SIZE);
