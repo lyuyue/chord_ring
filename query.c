@@ -3,7 +3,7 @@
 // ask node for id's successor
 void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
     find_predecessor(ctx, result, id);
-    //get_node_successor(ctx, result, result);
+    get_node_successor(ctx, result, result);
     return;
 }
 
@@ -15,9 +15,10 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
     memcpy(cur_node, ctx->local_node, NODE_SIZE);
 
     while (1) {
+        bzero(succ_node, NODE_SIZE);
         get_node_successor(ctx, cur_node, succ_node);
         uint32_t upper_bound = succ_node->id;
-        if (upper_bound < cur_node->id) upper_bound += power(2, MAXM);
+        if (upper_bound <= cur_node->id) upper_bound += power(2, MAXM);
         if (cur_node->id < id && id <= upper_bound) {
             break;
         }
@@ -26,6 +27,8 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
     }
 
     memcpy(result, cur_node, NODE_SIZE);
+
+    printf("find_predecessor result %u\n", result->id);
 
     free(cur_node);
     free(succ_node);
@@ -50,7 +53,6 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
         (struct sockaddr *) &cur_node->addr, SOCKADDR_SIZE) < 0) {
         perror("ERROR sendto() get_node_successor");
         free(msg);
-        exit(1);
         return;
     }
 
