@@ -102,7 +102,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
         if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < finger_id) {
             memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
         } else {
-            query_succ(ctx, &ctx->finger[i + 1].node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
+            query_succ(ctx, &ctx->finger[i + 1].node.addr, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
         }
     }
 
