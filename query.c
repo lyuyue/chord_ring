@@ -19,7 +19,7 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
         get_node_successor(ctx, succ_node, cur_node);
         uint32_t upper_bound = succ_node->id;
         if (upper_bound < cur_node->id) upper_bound += power(2, MAXM);
-        if (cur_node->id < id && id <= succ_node->id) {
+        if (cur_node->id < id && id <= upper_bound) {
             break;
         }
 
