@@ -22,7 +22,9 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
         printf("cur_id: %u, successor id: %u\n", cur_node->id, succ_node->id);
         if (upper_bound <= cur_node->id) upper_bound += power(2, MAXM);
 
-        if (cur_node->id <= id && id <= upper_bound) {
+        uint32_t tmp_id = id;
+        if (tmp_id < cur_node->id) tmp_id += power(2, MAXM); 
+        if (cur_node->id <= tmp_id && tmp_id <= upper_bound) {
             break;
         }
 
