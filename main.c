@@ -159,11 +159,15 @@ int main(int argc, char *argv[]) {
         }
 
         if (*msg_type == UPDATE_FINGER_TYPE) {
-            printf("UPDATE_FINGER_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
             memcpy(tmp_node, recv_buf + 4, NODE_SIZE);
             uint32_t idx;
             memcpy(&idx, recv_buf + 4 + NODE_SIZE, 4);
+
+
+            printf("UPDATE_FINGER_TYPE from %s idx: %u, finger_node: %u\n", 
+                inet_ntoa(src_addr.sin_addr), idx, tmp_node->id);
+
             // TODO: multithread
             update_finger_table_handler(&ctx, tmp_node, idx);
 
