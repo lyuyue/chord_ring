@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
+    print_ctx(&ctx);
+
     // Node Join
     if (entry_point == NULL) {
         // only node in the network

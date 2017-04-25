@@ -5,6 +5,8 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
     find_succ->type = FIND_SUCC_TYPE;
     find_succ->id = id;
 
+    printf("%s\n", inet_ntoa(entry_addr->sin_addr));
+
     if (sendto(ctx->sockfd, (char *) find_succ, sizeof(struct Find_Succ), 0,
         (struct sockaddr *) entry_addr, sizeof(struct sockaddr)) < 0) {
         perror("ERROR sendto(): Find_Succ");
