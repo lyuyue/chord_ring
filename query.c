@@ -9,7 +9,7 @@ void find_successor(struct CTX *ctx, struct Node *result, uint32_t id) {
 
 // ask node for id's predecessor
 void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
-    printf("find_predecessor ID：%u\n", id);
+    printf("find_predecessor for ID：%u\n", id);
     struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
     struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
 
@@ -122,6 +122,8 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
         memcpy(node, recv_buf + 4, NODE_SIZE);
         break;
     }
+
+    printf("get_closest_preceding_finger for ID: %u result %u\n", id, node->id);
 
     return;
 }
