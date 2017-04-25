@@ -69,11 +69,12 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
         bzero(recv_buf, BUF_SIZE);
 
         if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
-            (struct sockaddr *) &src, &addrlen) < 0) {
+            (struct sockaddr *) NULL, NULL) < 0) {
             continue;
         }
 
         memcpy(result, recv_buf + 4, NODE_SIZE);
+        break;
     }
 
     return;

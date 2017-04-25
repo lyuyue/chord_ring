@@ -124,6 +124,7 @@ int main(int argc, char *argv[]) {
                 malloc(sizeof(struct Get_Succ_Ans));
             msg->type = GET_SUCC_ANS_TYPE;
             memcpy(&msg->succ, ctx.local_succ, NODE_SIZE);
+            
             if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Succ_Ans), 0,
                     (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
                 perror("ERROR sendto() get_succ_ans");
