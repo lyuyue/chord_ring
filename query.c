@@ -123,8 +123,11 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
 
 // return closet finger preceding id
 void closest_preceding_finger_handler(struct CTX *ctx, struct Node *result, uint32_t id) {
+    if (id < ctx->local_id) id += power(2, MAXM);
     for (int i = MAXM; i > 0; i--) {
-        if (ctx->finger[i].node.id > ctx->local_id && ctx->finger[i].node.id < id) {
+        uint32_t finger_id = ctx->finger[i].node.id;
+        if (finger_id < ctx->local_id) finger_id += power(2, MAXM);
+        if (finger_id > ctx->local_id && ctx->finger[i].node.id < id) {
             memcpy(result, &ctx->finger[i].node, NODE_SIZE);
             return;
         }
