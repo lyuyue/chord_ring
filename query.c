@@ -12,11 +12,10 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
     struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
     struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
 
-    cur_node->id = ctx->local_id;
-    memcpy(&cur_node->addr, &ctx->local_addr, SOCKADDR_SIZE);
+    memcpy(cur_node, &ctx->local_node, NODE_SIZE);
 
     while (1) {
-        get_node_successor(ctx, succ_node, cur_node);
+        get_node_successor(ctx, cur_node, succ_node);
         uint32_t upper_bound = succ_node->id;
         if (upper_bound < cur_node->id) upper_bound += power(2, MAXM);
         if (cur_node->id < id && id <= upper_bound) {
