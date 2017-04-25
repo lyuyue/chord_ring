@@ -5,8 +5,6 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
     find_succ->type = FIND_SUCC_TYPE;
     find_succ->id = id;
 
-    printf("%s\n", inet_ntoa(entry_addr->sin_addr));
-
     if (sendto(ctx->sockfd, (char *) find_succ, sizeof(struct Find_Succ), 0,
         (struct sockaddr *) entry_addr, sizeof(struct sockaddr)) < 0) {
         perror("ERROR sendto(): Find_Succ");
@@ -37,6 +35,15 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
 void set_pred(struct CTX *ctx, struct Node *dst, struct Node *pred) {
     struct Set_Pred *msg = (struct Set_Pred *) malloc(sizeof(struct Set_Pred));
     msg->type = SET_PRED_TYPE;
+    memcpy(&msg->pred, pred, NODE_SIZE);
+
+    if (sendto(ctx->sockfd, (char *) msg, sizeof(struct Set_Pred), 0,
+            (struct sockaddr *) &dst->addr, SOCKADDR_SIZE) < 0) {
+        perror("ERROR sendto() set_pred");
+    }
+
+    free(msg);
+    return;
 }
 
 void init_finger_table(struct CTX *ctx, char *entry_point) {

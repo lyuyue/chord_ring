@@ -72,12 +72,16 @@ void print_ctx(struct CTX *ctx) {
     printf("Node ID: %u\n", ctx->local_id);
     printf("Predcessor ID: %u\n", ctx->local_pred->id);
 
+    printf("Local Pred %u %s\n", ctx->local_pred->id, inet_ntoa(ctx->local_pred->addr.sin_addr));
     printf("Local Node %u %s\n", ctx->local_node->id, inet_ntoa(ctx->local_node->addr.sin_addr));
+    printf("Local Succ %u %s\n", ctx->local_succ->id, inet_ntoa(ctx->local_succ->addr.sin_addr));
+    
     printf("Finger Table\n");
     for (int i = 0; i < MAXM; i++) {
         printf("start: %u, successor ID: %u, ip: %s\n", 
             ctx->finger[i].start, ctx->finger[i].node.id, inet_ntoa(ctx->finger[i].node.addr.sin_addr));
     }
 
+    printf("\n\n");
     return;
 }

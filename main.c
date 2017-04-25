@@ -153,6 +153,8 @@ int main(int argc, char *argv[]) {
         if (*msg_type == SET_PRED_TYPE) {
             printf("SET_PRED_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
             memcpy(ctx.local_pred, recv_buf + 4, NODE_SIZE);
+
+            print_ctx(&ctx);
         }
 
         if (*msg_type == UPDATE_FINGER_TYPE) {
