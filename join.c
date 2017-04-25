@@ -126,6 +126,12 @@ void update_others(struct CTX *ctx) {
 
 void update_finger_table(struct CTX *ctx, struct Node *dst, struct Node *node, uint32_t idx) {
     printf("update_finger_table DST id: %u, Finger ID: %u, finger idx: %u\n", dst->id, node->id, idx);
+
+    if (dst->id == ctx->local_id) {
+        update_finger_table_handler(ctx, node, idx);
+        return;
+    }
+
     struct Update_Finger *msg = (struct Update_Finger *) malloc(sizeof(struct Update_Finger));
     msg->type = UPDATE_FINGER_TYPE;
     msg->idx = idx;
