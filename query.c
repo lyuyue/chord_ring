@@ -12,7 +12,7 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
     struct Node *cur_node = (struct Node *) malloc(NODE_SIZE);
     struct Node *succ_node = (struct Node *) malloc(NODE_SIZE);
 
-    memcpy(cur_node, &ctx->local_node, NODE_SIZE);
+    memcpy(cur_node, ctx->local_node, NODE_SIZE);
 
     while (1) {
         get_node_successor(ctx, cur_node, succ_node);
