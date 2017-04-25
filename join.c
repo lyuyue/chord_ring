@@ -78,9 +78,11 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
         uint32_t *msg_type = (uint32_t *) recv_buf;
         if (*msg_type != GET_PRED_ANS_TYPE) continue;
 
-        memcpy(&ctx->local_pred, recv_buf + 4, NODE_SIZE);
+        memcpy(ctx->local_pred, recv_buf + 4, NODE_SIZE);
         break;
     }
+
+    print_ctx(ctx);
 
     //  successor.predecessor = local_node
     set_pred(ctx, ctx->local_succ, ctx->local_node);
