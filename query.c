@@ -95,7 +95,7 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
     struct Get_Closest_Pred *msg = (struct Get_Closest_Pred *)
         malloc(sizeof(struct Get_Closest_Pred));
     msg->type = GET_CLOSEST_PRED_TYPE;
-    memcpy(&msg->type, node, NODE_SIZE);
+    msg->id = id;
 
     if (sendto(ctx->sockfd, (char *) msg, sizeof(struct Get_Closest_Pred), 0,
         (struct sockaddr *) &node->addr, SOCKADDR_SIZE) < 0) {
