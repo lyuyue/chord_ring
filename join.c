@@ -53,6 +53,8 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     query_succ(ctx, &entry_node, &ctx->finger[0].node, ctx->finger[0].start);
     ctx->local_succ = &ctx->finger[0].node;
 
+    print_ctx(ctx);
+
     struct Get_Pred *get_pred = (struct Get_Pred *) malloc(sizeof(struct Get_Pred));
     get_pred->type = GET_PRED_TYPE;
 
@@ -64,6 +66,8 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     }
 
     free(get_pred);
+
+    print_ctx(ctx);
 
     char recv_buf[BUF_SIZE];
 
@@ -92,6 +96,8 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
             query_succ(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
         }
     }
+
+    print_ctx(ctx);
 
     return;
 }

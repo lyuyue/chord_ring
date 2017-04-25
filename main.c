@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 
             find_successor(&ctx, &msg->succ, id);
 
-            if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Pred_Ans), 0,
+            if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Find_Succ_Ans), 0,
                     (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
                 perror("ERROR sendto() find_successor");
             }
