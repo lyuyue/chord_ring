@@ -31,8 +31,6 @@ void query_succ(struct CTX *ctx, struct sockaddr_in *entry_addr, struct Node *re
         break;
     }
 
-    result->addr.sin_family = AF_INET;
-    result->addr.sin_port = htons(ctx->port);
     return;
 }
 
