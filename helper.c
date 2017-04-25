@@ -67,3 +67,15 @@ uint32_t power(uint32_t n, uint32_t k) {
     }
     return result;
 }
+
+void print_ctx(struct CTX *ctx) {
+    printf("Node ID: %u\n", ctx->local_id);
+    printf("Predcessor ID: %u\n", ctx->pred->id);
+
+    printf("Finger Table\n");
+    for (int i = 0; i < MAXM; i++) {
+        printf("start: %u, successor ID: %u\n", ctx->finger[i].start, ctx->finger[i].node.id);
+    }
+
+    return;
+}

@@ -16,4 +16,6 @@ uint32_t power(uint32_t n, uint32_t k);
 
 void get_local_ip(struct sockaddr_in *result);
 
+void print_ctx(struct CTX *ctx);
+
 #endif

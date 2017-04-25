@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
     ctx.local_pred = (struct Node *) malloc(NODE_SIZE);
 
     for (int i = 0; i < MAXM; i ++) {
-        ctx.finger[i].start = ctx.local_id + power(2, i);
+        ctx.finger[i].start = （ctx.local_id + power(2, i)）% power(2, MAXM);
     }
 
     ctx.local_succ = (struct Node *) &ctx.finger[0].node;
@@ -69,6 +69,8 @@ int main(int argc, char *argv[]) {
         init_finger_table(&ctx, entry_point);
         update_others(&ctx);
     }
+
+    print_ctx(&ctx);
 
 
     fcntl(ctx.sockfd, F_SETFL, O_NONBLOCK);
