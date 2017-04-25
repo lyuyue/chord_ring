@@ -58,7 +58,7 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
     get_pred->type = GET_PRED_TYPE;
 
     if (sendto(ctx->sockfd, (char *) get_pred, sizeof(struct Get_Pred), 0,
-        (struct sockaddr *) &ctx->local_succ.addr, SOCKADDR_SIZE) < 0) {
+        (struct sockaddr *) &ctx->local_succ->addr, SOCKADDR_SIZE) < 0) {
         perror("ERROR sendto(): Get_Pred");
         free(get_pred);
         return;  
