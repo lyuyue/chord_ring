@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
                 malloc(sizeof(struct Get_Succ_Ans));
             msg->type = GET_SUCC_ANS_TYPE;
             memcpy(&msg->succ, ctx.local_succ, NODE_SIZE);
-            
+
             if (sendto(ctx.sockfd, (char *) msg, sizeof(struct Get_Succ_Ans), 0,
                     (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
                 perror("ERROR sendto() get_succ_ans");
@@ -166,6 +166,8 @@ int main(int argc, char *argv[]) {
             memcpy(&idx, recv_buf + 4 + NODE_SIZE, 4);
             // TODO: multithread
             update_finger_table_handler(&ctx, tmp_node, idx);
+
+            print_ctx(&ctx);
         }
 
         if (*msg_type == GET_CLOSEST_PRED_TYPE) {
