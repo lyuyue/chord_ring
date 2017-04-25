@@ -48,7 +48,10 @@ int main(int argc, char *argv[]) {
 
     ctx.local_succ = (struct Node *) &ctx.finger[0].node;
 
-    get_local_ip(&ctx.local_node->addr);
+    get_local_ip(&ctx.local_addr);
+
+    memcpy(&ctx.local_node->addr, &ctx.local_addr, SOCKADDR_SIZE);
+
     ctx.local_node->addr.sin_family = AF_INET;
     ctx.local_node->addr.sin_port = htons(ctx.port);
 
