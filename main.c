@@ -184,13 +184,14 @@ int main(int argc, char *argv[]) {
 
             printf("GET_CLOSEST_PRED_TYPE from %s for %u\n", inet_ntoa(src_addr.sin_addr), tmp->id);
             
+            uint32_t msg_len = sizeof(struct Closest_Pred);
             struct Closest_Pred *msg = (struct Closest_Pred *) 
-                malloc(sizeof(struct Closest_Pred));
+                malloc(msg_len);
             msg->type = CLOSEST_PRED_TYPE;
 
             closest_preceding_finger_handler(&ctx, &msg->pred, tmp->id);
 
-            if (sendto(ctx.sockfd, (char *) msg, sizeof(msg), 0,
+            if (sendto(ctx.sockfd, (char *) msg, msg_len, 0,
                     (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
                 perror("ERROR sendto() closest_preceding_finger_handler");
                 continue;
