@@ -28,19 +28,19 @@ void get_local_ip(struct sockaddr_in *result) {
      
     struct sockaddr_in serv;
      
-    int sock = socket ( AF_INET, SOCK_DGRAM, 0);
+    int sock = socket(AF_INET, SOCK_DGRAM, 0);
      
     //Socket could not be created
     if (sock < 0) {
         perror("Socket error");
     }
      
-    memset( &serv, 0, sizeof(serv) );
+    memset(&serv, 0, sizeof(serv) );
     serv.sin_family = AF_INET;
     serv.sin_addr.s_addr = inet_addr( google_dns_server );
     serv.sin_port = htons( dns_port );
  
-    int err = connect( sock , (const struct sockaddr*) &serv , sizeof(serv) );
+    int err = connect(sock, (const struct sockaddr*) &serv, sizeof(serv));
      
     struct sockaddr_in name;
     socklen_t namelen = sizeof(name);
@@ -71,7 +71,7 @@ void print_ctx(struct CTX *ctx) {
     if (ctx->local_pred != NULL) {
         printf("Local Pred %u %s\n", ctx->local_pred->id, inet_ntoa(ctx->local_pred->addr.sin_addr));
     }
-    
+
     printf("Local Node %u %s\n", ctx->local_node->id, inet_ntoa(ctx->local_node->addr.sin_addr));
     printf("Local Succ %u %s\n", ctx->local_succ->id, inet_ntoa(ctx->local_succ->addr.sin_addr));
     
