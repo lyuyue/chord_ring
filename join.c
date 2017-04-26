@@ -193,6 +193,7 @@ void query_pred(struct CTX *ctx, struct Node *dst, struct Node *result) {
 }
 
 void notify(struct CTX *ctx, struct Node *dst) {
+    printf("notify %u to be pred of %u\n", ctx->local_id, dst->id);
     uint32_t msg_len = sizeof(struct Notify);
     struct Notify *msg = (struct Notify *) malloc(msg_len);
     msg->type = NOTIFY_TYPE;
@@ -205,6 +206,7 @@ void notify(struct CTX *ctx, struct Node *dst) {
 }
 
 void stablize(struct CTX *ctx) {
+    printf("stablize\n");
     struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
     query_pred(ctx, ctx->local_succ, tmp_node);
 
@@ -229,6 +231,7 @@ void notify_handler(struct CTX *ctx, struct Node *node) {
 }
 
 void fix_fingers(struct CTX *ctx) {
+    printf("fix_fingers\n");
     for (int i = 1; i < MAXM; i++) {
         find_successor(ctx, &ctx->finger[i].node, ctx->finger[i].start);
     }

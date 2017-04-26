@@ -199,6 +199,7 @@ int main(int argc, char *argv[]) {
 
         if (*msg_type == NOTIFY_TYPE) {
             struct Notify *msg = (struct Notify *) recv_buf;
+            printf("NOTIFY_TYPE from %u %s\n", msg->node.id, inet_ntoa(msg->node.addr.sin_addr));
             notify_handler(&ctx, &msg->node);
             continue;
         }
@@ -206,9 +207,9 @@ int main(int argc, char *argv[]) {
         time(&cur_time);
 
         if (cur_time - prev_time > thres) {
-            prev_time = cur_time;
             stablize(&ctx);
             fix_fingers(&ctx);
+            time(&prev_time);
         }
     }
     
