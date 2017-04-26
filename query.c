@@ -112,7 +112,6 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
 
         if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
             (struct sockaddr *) NULL, NULL) < 0) {
-            perror("ERROR recvfrom() get_closest_preceding_finger");
             continue;
         }
 
@@ -140,7 +139,7 @@ void closest_preceding_finger_handler(struct CTX *ctx, struct Node *result, uint
     if (id < ctx->local_id) id += power(2, MAXM);
     for (int i = MAXM - 1; i >= 0; i--) {
         if (ctx->finger[i].node.addr.sin_addr.s_addr == 0) continue;
-        
+
         uint32_t finger_id = ctx->finger[i].node.id;
         if (finger_id < ctx->local_id) finger_id += power(2, MAXM);
 
