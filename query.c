@@ -70,7 +70,7 @@ void find_predecessor(struct CTX *ctx, struct Node *result, uint32_t id) {
         }
 
         get_closest_preceding_finger(ctx, cur_node, id);
-        printf("closest_preceding_finger %u %s\n", cur_node->id, inet_ntoa(cur_node->addr.sin_addr.s_addr));
+        printf("closest_preceding_finger %u %s\n", cur_node->id, inet_ntoa(cur_node->addr.sin_addr));
     }
 
     memcpy(result, cur_node, NODE_SIZE);
@@ -123,7 +123,8 @@ void get_closest_preceding_finger(struct CTX *ctx, struct Node *node, uint32_t i
         break;
     }
 
-    printf("get_closest_preceding_finger for ID: %u result %u ip: %s\n", id, node->id, inet_ntoa(node->addr.sin_addr.s_addr));
+    printf("get_closest_preceding_finger for ID: %u result %u ip: %s\n", 
+            id, node->id, inet_ntoa(node->addr.sin_addr));
 
     return;
 }
