@@ -14,7 +14,7 @@ struct CTX ctx;
 
 char *entry_point = NULL;
 
-time_t thres = 5;
+time_t thres = 10;
 time_t prev_time = 0;
 time_t cur_time = 0;
 
