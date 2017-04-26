@@ -163,6 +163,11 @@ void update_finger_table_handler(struct CTX *ctx, struct Node *node, uint32_t id
 
 // stablization
 void query_pred(struct CTX *ctx, struct Node *dst, struct Node *result) {
+    if (dst->id == ctx->local_id) {
+        memcpy(result, ctx->local_pred, NODE_SIZE);
+        return;
+    }
+    
     uint32_t msg_len = sizeof(struct Get_Pred);
     struct Get_Pred *msg = (struct Get_Pred *) malloc(msg_len);
     msg->type = GET_PRED_TYPE;
