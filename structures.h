@@ -91,4 +91,9 @@ struct Closest_Pred {
     struct Node pred;
 };
 
+struct Notify {
+    uint32_t type;
+    struct Node node;
+};
+
 #endif

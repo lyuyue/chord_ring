@@ -83,3 +83,10 @@ void print_ctx(struct CTX *ctx) {
     printf("\n\n");
     return;
 }
+
+int inrange(uint32_t left, uint32_t right, uint32_t mid) {
+    if (left >= right) right += power(2, MAXM);
+    if (left < mid && mid < right) return 1;
+
+    return 0;
+}

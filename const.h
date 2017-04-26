@@ -57,3 +57,7 @@
 #ifndef CLOSEST_PRED_TYPE
 #define CLOSEST_PRED_TYPE   11
 #endif
+
+#ifndef NOTIFY_TYPE
+#define NOTIFY_TYPE         12
+#endif

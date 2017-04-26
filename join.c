@@ -62,54 +62,54 @@ void init_finger_table(struct CTX *ctx, char *entry_point) {
 
     print_ctx(ctx);
 
-    struct Get_Pred *get_pred = (struct Get_Pred *) malloc(sizeof(struct Get_Pred));
-    get_pred->type = GET_PRED_TYPE;
+    // struct Get_Pred *get_pred = (struct Get_Pred *) malloc(sizeof(struct Get_Pred));
+    // get_pred->type = GET_PRED_TYPE;
 
-    if (sendto(ctx->sockfd, (char *) get_pred, sizeof(struct Get_Pred), 0,
-        (struct sockaddr *) &ctx->local_succ->addr, SOCKADDR_SIZE) < 0) {
-        perror("ERROR sendto(): Get_Pred");
-        free(get_pred);
-        return;  
-    }
+    // if (sendto(ctx->sockfd, (char *) get_pred, sizeof(struct Get_Pred), 0,
+    //     (struct sockaddr *) &ctx->local_succ->addr, SOCKADDR_SIZE) < 0) {
+    //     perror("ERROR sendto(): Get_Pred");
+    //     free(get_pred);
+    //     return;  
+    // }
 
-    free(get_pred);
+    // free(get_pred);
 
-    char recv_buf[BUF_SIZE];
+    // char recv_buf[BUF_SIZE];
 
-    while (1) {
-        bzero(recv_buf, BUF_SIZE);
-        if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
-                (struct sockaddr *) NULL, NULL) < 0) {
-            perror("ERROR recvfrom() get_pred");
-        }
+    // while (1) {
+    //     bzero(recv_buf, BUF_SIZE);
+    //     if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
+    //             (struct sockaddr *) NULL, NULL) < 0) {
+    //         perror("ERROR recvfrom() get_pred");
+    //     }
 
-        uint32_t *msg_type = (uint32_t *) recv_buf;
-        if (*msg_type != GET_PRED_ANS_TYPE) continue;
+    //     uint32_t *msg_type = (uint32_t *) recv_buf;
+    //     if (*msg_type != GET_PRED_ANS_TYPE) continue;
 
-        memcpy(ctx->local_pred, recv_buf + 4, NODE_SIZE);
-        break;
-    }
+    //     memcpy(ctx->local_pred, recv_buf + 4, NODE_SIZE);
+    //     break;
+    // }
 
-    print_ctx(ctx);
+    // print_ctx(ctx);
 
-    //  successor.predecessor = local_node
-    set_pred(ctx, ctx->local_succ, ctx->local_node);
+    // //  successor.predecessor = local_node
+    // set_pred(ctx, ctx->local_succ, ctx->local_node);
 
 
-    for (int i = 0; i < MAXM - 1; i++) {
-        uint32_t finger_id = ctx->finger[i].node.id;
-        if (finger_id <= ctx->local_id) finger_id += power(2, MAXM);
+    // for (int i = 0; i < MAXM - 1; i++) {
+    //     uint32_t finger_id = ctx->finger[i].node.id;
+    //     if (finger_id <= ctx->local_id) finger_id += power(2, MAXM);
 
-        if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < finger_id) {
-            memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
-        } else {
-            query_succ(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
-        }
-    }
+    //     if (ctx->local_id <= ctx->finger[i + 1].start && ctx->finger[i + 1].start < finger_id) {
+    //         memcpy(&ctx->finger[i + 1].node, &ctx->finger[i].node, sizeof(struct Node));
+    //     } else {
+    //         query_succ(ctx, &entry_node, &ctx->finger[i + 1].node, ctx->finger[i + 1].start);
+    //     }
+    // }
 
-    print_ctx(ctx);
+    // print_ctx(ctx);
 
-    printf("init_finger_table() finished\n");
+    // printf("init_finger_table() finished\n");
 
     return;
 }
@@ -153,9 +153,84 @@ void update_finger_table_handler(struct CTX *ctx, struct Node *node, uint32_t id
     uint32_t node_id = node->id;
     if (node_id < ctx->local_id) node_id += power(2, MAXM);
 
-    if (ctx->local_id < node_id && node_id < finger_id) {
+    if (ctx->local_id <= node_id && node_id < finger_id) {
         memcpy(&ctx->finger[idx].node, node, NODE_SIZE);
         print_ctx(ctx);
         update_finger_table(ctx, ctx->local_pred, node, idx);
     }
+}
+
+
+// stablization
+void query_pred(struct CTX *ctx, struct Node *dst, struct Node *result) {
+    uint32_t msg_len = sizeof(struct Get_Pred);
+    struct Get_Pred *msg = (struct Get_Pred *) malloc(msg_len);
+    msg->type = GET_PRED_TYPE;
+
+    if (sendto(ctx->sockfd, (char *) msg, msg_len, 0,
+            (struct sockaddr *) &dst->addr, SOCKADDR_SIZE) < 0) {
+        perror("ERROR sendto() query_pred");
+    }
+
+    char recv_buf[BUF_SIZE];
+
+    while (1) {
+        bzero(recv_buf, BUF_SIZE);
+
+        if (recvfrom(ctx->sockfd, recv_buf, BUF_SIZE, 0,
+                (struct sockaddr *) NULL, NULL) < 0) {
+            continue;
+        }
+
+        uint32_t *msg_type = (uint32_t *) recv_buf;
+        if (*msg_type != GET_PRED_ANS_TYPE) continue;
+
+        memcpy(result, recv_buf + 4, NODE_SIZE);
+        break;
+    }
+
+    return;
+}
+
+void notify(struct CTX *ctx, struct Node *dst) {
+    uint32_t msg_len = sizeof(struct Notify);
+    struct Notify *msg = (struct Notify *) malloc(msg_len);
+    msg->type = NOTIFY_TYPE;
+    memcpy(&msg->node, ctx->local_node, NODE_SIZE);
+
+    if (sendto(ctx->sockfd, (char *) msg, msg_len, 0,
+            (struct sockaddr *) &dst->addr, SOCKADDR_SIZE) < 0) {
+        perror("ERROR sendto() notify");
+    }
+}
+
+void stablize(struct CTX *ctx) {
+    struct Node *tmp_node = (struct Node *) malloc(NODE_SIZE);
+    query_pred(ctx, ctx->local_succ, tmp_node);
+
+    if (inrange(ctx->local_node->id, ctx->local_succ->id, tmp_node->id)) {
+        memcpy(ctx->local_succ, tmp_node, NODE_SIZE);
+    }
+
+    notify(ctx, ctx->local_succ);
+}
+
+void notify_handler(struct CTX *ctx, struct Node *node) {
+    if (ctx->local_pred == NULL || inrange(ctx->local_pred->id, ctx->local_node->id, node->id)) {
+        if (ctx->local_pred == NULL) {
+            ctx->local_pred = (struct Node *) malloc(NODE_SIZE);
+        } 
+        memcpy(ctx->local_pred, node, NODE_SIZE);
+    }
+
+    print_ctx(ctx);
+
+    return;
+}
+
+void fix_fingers(struct CTX *ctx) {
+    for (int i = 1; i < MAXM; i++) {
+        find_successor(ctx, &ctx->finger[i].node, ctx->finger[i].start);
+    }
+    return;
 }

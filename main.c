@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "structures.h"
 #include "const.h"
@@ -12,6 +13,10 @@
 struct CTX ctx;
 
 char *entry_point = NULL;
+
+time_t thres = 5;
+time_t prev_time = 0;
+time_t cur_time = 0;
 
 int main(int argc, char *argv[]) {
     // Initialization
@@ -40,7 +45,7 @@ int main(int argc, char *argv[]) {
 
     // Context setup
     ctx.local_node = (struct Node *) malloc(NODE_SIZE);
-    ctx.local_pred = (struct Node *) malloc(NODE_SIZE);
+    ctx.local_pred = NULL;
 
     for (int i = 0; i < MAXM; i ++) {
         ctx.finger[i].start = (ctx.local_id + power(2, i)) % power(2, MAXM);
@@ -71,15 +76,17 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < MAXM; i++) {
             memcpy(&ctx.finger[i].node, ctx.local_node, NODE_SIZE);
         }
+        ctx.local_pred = (struct Node *) malloc(NODE_SIZE);
         memcpy(ctx.local_pred, ctx.local_node, NODE_SIZE);
     } else {
         // an arbitrary entry point of network is given
         init_finger_table(&ctx, entry_point);
-        update_others(&ctx);
+        // update_others(&ctx);
     }
 
-    print_ctx(&ctx);
+    time(&prev_time);
 
+    print_ctx(&ctx);
 
     fcntl(ctx.sockfd, F_SETFL, O_NONBLOCK);
 
@@ -91,10 +98,8 @@ int main(int argc, char *argv[]) {
         struct sockaddr_in src_addr;
         uint32_t addrlen = SOCKADDR_SIZE;
 
-        if (recvfrom(ctx.sockfd, recv_buf, BUF_SIZE, 0,
-                (struct sockaddr *) &src_addr, &addrlen) < 0) {
-            continue;
-        }
+        recvfrom(ctx.sockfd, recv_buf, BUF_SIZE, 0,
+            (struct sockaddr *) &src_addr, &addrlen);
 
         uint32_t *msg_type = (uint32_t *) recv_buf;
 
@@ -190,6 +195,20 @@ int main(int argc, char *argv[]) {
                 perror("ERROR sendto() closest_preceding_finger_handler");
                 continue;
             }
+        }
+
+        if (*msg_type == NOTIFY_TYPE) {
+            struct Notify *msg = (struct Notify *) recv_buf;
+            notify_handler(&ctx, &msg->node);
+            continue;
+        }
+
+        time(&cur_time);
+
+        if (cur_time - prev_time > thres) {
+            prev_time = cur_time;
+            stablize(&ctx);
+            fix_fingers(&ctx);
         }
     }
     

@@ -20,4 +20,6 @@ void get_local_ip(struct sockaddr_in *result);
 
 void print_ctx(struct CTX *ctx);
 
+int inrange(uint32_t left, uint32_t right, uint32_t mid);
+
 #endif
