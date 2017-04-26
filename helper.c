@@ -68,11 +68,10 @@ uint32_t power(uint32_t n, uint32_t k) {
 
 void print_ctx(struct CTX *ctx) {
     printf("Node ID: %u\n", ctx->local_id);
-    printf("Predcessor ID: %u\n", ctx->local_pred->id);
-
     if (ctx->local_pred != NULL) {
         printf("Local Pred %u %s\n", ctx->local_pred->id, inet_ntoa(ctx->local_pred->addr.sin_addr));
     }
+    
     printf("Local Node %u %s\n", ctx->local_node->id, inet_ntoa(ctx->local_node->addr.sin_addr));
     printf("Local Succ %u %s\n", ctx->local_succ->id, inet_ntoa(ctx->local_succ->addr.sin_addr));
     
