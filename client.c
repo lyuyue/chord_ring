@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
     }
 
     // parse arguments
-    if (strcmp(argv[0], "leave") == 0) {
+    if (strcmp(argv[1], "leave") == 0) {
+        printf("LEAVE_TYPE\n");
         uint32_t msg_len = sizeof(struct Leave);
         struct Leave *msg = (struct Leave *) malloc(msg_len);
         msg->type = LEAVE_TYPE;
