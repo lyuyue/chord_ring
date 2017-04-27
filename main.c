@@ -18,6 +18,8 @@ time_t thres = 10;
 time_t prev_time = 0;
 time_t cur_time = 0;
 
+int terminate_flag = 0;
+
 int main(int argc, char *argv[]) {
     // Initialization
     bzero(&ctx, sizeof(struct CTX));
@@ -232,6 +234,8 @@ int main(int argc, char *argv[]) {
             }
 
             free(set_succ);
+
+            terminate_flag = 1;
         }
 
         if (*msg_type == SET_SUCC_TYPE) {
@@ -243,7 +247,7 @@ int main(int argc, char *argv[]) {
 
         time(&cur_time);
 
-        if (cur_time - prev_time > thres) {
+        if (cur_time - prev_time > thres && terminate_flag == 0) {
             stablize(&ctx);
             fix_fingers(&ctx);
             time(&prev_time);
