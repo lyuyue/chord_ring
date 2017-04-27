@@ -28,19 +28,6 @@ struct CTX {
     struct Finger_Entry finger[MAXM];
 };
 
-// Key_Query and Query_Answer
-struct Key_Query {
-    uint32_t type;
-    uint32_t id;
-    struct sockaddr_in src;
-};
-
-struct Query_Ans {
-    uint32_t flag;
-    uint32_t id;
-    uint32_t value;
-};
-
 // Succ_Query and answer
 struct Find_Succ {
     uint32_t type;
@@ -92,6 +79,25 @@ struct Closest_Pred {
 };
 
 struct Notify {
+    uint32_t type;
+    struct Node node;
+};
+
+struct Leave {
+    uint32_t type;
+};
+
+struct Key_Query {
+    uint32_t type;
+    uint32_t key;
+};
+
+struct Key_Query_Ans {
+    uint32_t type;
+    struct Node node;
+};
+
+struct Set_Succ {
     uint32_t type;
     struct Node node;
 };

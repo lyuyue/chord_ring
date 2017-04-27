@@ -194,8 +194,11 @@ int main(int argc, char *argv[]) {
             if (sendto(ctx.sockfd, (char *) msg, msg_len, 0,
                     (struct sockaddr *) &src_addr, SOCKADDR_SIZE) < 0) {
                 perror("ERROR sendto() closest_preceding_finger_handler");
+                free(msg);
                 continue;
             }
+
+            free(msg);
         }
 
         if (*msg_type == NOTIFY_TYPE) {
@@ -203,6 +206,39 @@ int main(int argc, char *argv[]) {
             printf("NOTIFY_TYPE from %u %s\n", msg->node.id, inet_ntoa(msg->node.addr.sin_addr));
             notify_handler(&ctx, &msg->node);
             continue;
+        }
+
+        if (*msg_type == LEAVE_TYPE) {
+            printf("LEAVE_TYPE\n");
+            uint32_t msg_len = sizeof(struct Set_Pred);
+            struct Set_Pred *set_pred = (struct Set_Pred *) malloc(msg_len);
+
+            if (sendto(ctx.sockfd, (char *) set_pred, msg_len, 0,
+                    (struct sockaddr *) &ctx.local_succ->addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() closest_preceding_finger_handler");
+                free(set_pred);
+                continue;
+            }
+
+            free(set_pred);
+
+            struct Set_Succ *set_succ = (struct Set_Succ *) malloc(msg_len);
+
+            if (sendto(ctx.sockfd, (char *) set_succ, msg_len, 0,
+                    (struct sockaddr *) &ctx.local_pred->addr, SOCKADDR_SIZE) < 0) {
+                perror("ERROR sendto() closest_preceding_finger_handler");
+                free(set_succ);
+                continue;
+            }
+
+            free(set_succ);
+        }
+
+        if (*msg_type == SET_SUCC_TYPE) {
+            printf("SET_SUCC_TYPE from %s\n", inet_ntoa(src_addr.sin_addr));
+            memcpy(ctx.local_succ, recv_buf + 4, NODE_SIZE);
+
+            print_ctx(&ctx);
         }
 
         time(&cur_time);

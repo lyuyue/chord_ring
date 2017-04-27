@@ -16,7 +16,6 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
         return;
     }
 
-    socklen_t addrlen = SOCKADDR_SIZE;
     uint32_t msg_len = sizeof(struct Get_Succ);
     struct Get_Succ *msg = (struct Get_Succ *) malloc(msg_len);
     msg->type = GET_SUCC_TYPE;
@@ -31,7 +30,6 @@ void get_node_successor(struct CTX *ctx, struct Node *cur_node, struct Node *res
     free(msg);
 
     char recv_buf[BUF_SIZE];
-    struct sockaddr_in src;
 
     while (1) {
         bzero(recv_buf, BUF_SIZE);

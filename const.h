@@ -61,3 +61,19 @@
 #ifndef NOTIFY_TYPE
 #define NOTIFY_TYPE         12
 #endif
+
+#ifndef LEAVE_TYPE
+#define LEAVE_TYPE          13
+#endif
+
+#ifndef KEY_QUERY_TYPE
+#define KEY_QUERY_TYPE      14
+#endif
+
+#ifndef KEY_QUERY_ANS_TYPE
+#define KEY_QUERY_ANS_TYPE  15
+#endif
+
+#ifndef SET_SUCC_TYPE
+#define SET_SUCC_TYPE       16
+#endif
