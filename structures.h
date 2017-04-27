@@ -99,7 +99,7 @@ struct Key_Query_Ans {
 
 struct Set_Succ {
     uint32_t type;
-    struct Node node;
+    struct Node succ;
 };
 
 #endif

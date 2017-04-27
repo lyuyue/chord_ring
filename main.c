@@ -214,6 +214,8 @@ int main(int argc, char *argv[]) {
             printf("LEAVE_TYPE\n");
             uint32_t msg_len = sizeof(struct Set_Pred);
             struct Set_Pred *set_pred = (struct Set_Pred *) malloc(msg_len);
+            set_pred->type = SET_PRED_TYPE;
+            memcpy(&set_pred->pred, ctx.local_pred, NODE_SIZE);
 
             if (sendto(ctx.sockfd, (char *) set_pred, msg_len, 0,
                     (struct sockaddr *) &ctx.local_succ->addr, SOCKADDR_SIZE) < 0) {
@@ -225,6 +227,8 @@ int main(int argc, char *argv[]) {
             free(set_pred);
 
             struct Set_Succ *set_succ = (struct Set_Succ *) malloc(msg_len);
+            set_succ->type = SET_SUCC_TYPE;
+            memcpy(&set_succ->succ, ctx.local_succ, NODE_SIZE);
 
             if (sendto(ctx.sockfd, (char *) set_succ, msg_len, 0,
                     (struct sockaddr *) &ctx.local_pred->addr, SOCKADDR_SIZE) < 0) {
