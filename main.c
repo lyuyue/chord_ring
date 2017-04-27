@@ -9,6 +9,7 @@
 #include "helper.h"
 #include "join.h"
 #include "query.h"
+#include "stablize.h"
 
 struct CTX ctx;
 

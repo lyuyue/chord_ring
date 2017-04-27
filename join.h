@@ -18,13 +18,3 @@ void update_others(struct CTX *ctx);
 void update_finger_table(struct CTX *ctx, struct Node *dst, struct Node *node, uint32_t idx);
 
 void update_finger_table_handler(struct CTX *ctx, struct Node *node, uint32_t idx);
-
-void notify(struct CTX *ctx, struct Node *dst);
-
-void stablize(struct CTX *ctx);
-
-void notify_handler(struct CTX *ctx, struct Node *node);
-
-void query_pred(struct CTX *ctx, struct Node *dst, struct Node *result);
-
-void fix_fingers(struct CTX *ctx);
